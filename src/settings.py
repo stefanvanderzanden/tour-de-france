@@ -26,6 +26,8 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_PROFILE_MODULE = 'gebruikers.UserProfile'
+LOGIN_URL= 'login/'
 
 # Application definition
 
@@ -36,7 +38,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-)
+
+    'south',
+    'game',
+    'gebruikers',
+    'resultaten',
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,9 +54,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'TourDeFrance.urls'
+ROOT_URLCONF = 'urls'
 
-WSGI_APPLICATION = 'TourDeFrance.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
@@ -57,8 +64,12 @@ WSGI_APPLICATION = 'TourDeFrance.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'tour',                      # Or path to database file if using sqlite3.
+        'USER': 'tour',                      # Not used with sqlite3.
+        'PASSWORD': 'tour',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -80,3 +91,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, "static/templates"),
+    )
