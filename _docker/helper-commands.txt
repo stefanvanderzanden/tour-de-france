@@ -1,0 +1,5 @@
+# Install new django app (with django-admin)
+docker run -it --user 1000:1000 -v $(pwd):/home/appuser/code tourdefrance bash
+
+# Install new package in pipenv
+docker run -it --user root -v $(pwd):/home/appuser/code tourdefrance bash
