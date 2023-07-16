@@ -73,7 +73,7 @@ class StageResultTabularInline(admin.TabularInline):
 
 @admin.register(StageDay)
 class StageDayChildAdmin(DayChildAdmin):
-    list_display = ["number", "start_city", "end_city", "distance", "stage_type", "round"]
+    list_display = ["date", "round", "number", "start_city", "end_city", "distance", "stage_type"]
     base_model = StageDay
     base_fieldsets = (
         ("Standard info", {
