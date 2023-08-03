@@ -1,11 +1,20 @@
-FROM python:3.10
+FROM nikolaik/python-nodejs:python3.10-nodejs20-slim
+#FROM python:3.10
 
 RUN apt update
 
 # Install supporting packages
-RUN apt install -y vim netcat lsof
+RUN apt install -y vim # netcat lsof
 # Requirements for psycopg2 package
 RUN apt install -y libpq-dev python3-dev
+
+# Install packages for NodeJS
+#RUN apt-get install -y git-core curl build-essential openssl libssl-dev \
+# && git clone https://github.com/nodejs/node.git \
+# && cd node \
+# && ./configure \
+# && make \
+# && sudo make install
 
 ENV USER appuser
 ENV HOME /home/$USER

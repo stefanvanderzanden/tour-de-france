@@ -5,5 +5,7 @@
 *.pyc
 *.py~
 *.html~
-
 *.sqlite3
+
+# Virtualenv
+.venv

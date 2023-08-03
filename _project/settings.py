@@ -31,9 +31,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "django_countries",
+    "tailwind",
+    # "django_browser_reload",
+
 
     "apps.games",
     "apps.races",
+    "apps.theme",
     "apps.users",
 ]
 
@@ -128,3 +132,8 @@ STATIC_URL = "/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "users.User"
+
+TAILWIND_APP_NAME = "apps.theme"
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

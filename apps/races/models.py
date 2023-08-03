@@ -69,6 +69,7 @@ class RiderForTeam(models.Model):
         verbose_name=_("Renner nog in koers"),
         default=True
     )
+    # photo = models.ImageField()
 
     class Meta:
         verbose_name = _("Renner voor team")

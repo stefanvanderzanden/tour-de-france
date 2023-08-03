@@ -1,5 +1,6 @@
 # Install new django app (with django-admin) - (because we need to be the user of the hos-system)
 docker run -it --user 1000:1000 -v $(pwd):/home/appuser/code tourdefrance bash
+docker exec -it --user 1000:1000 tourdefrance-web bash
 
 # Install new package in pipenv
 docker run -it --user root -v $(pwd):/home/appuser/code tourdefrance bash
