@@ -34,11 +34,6 @@ class ParticipantTeam(models.Model):
         verbose_name=_("Riders"),
         blank=True
     )
-    # stage_scores = models.ManyToManyField(
-    #     "games.StageScoreForRider",
-    #     verbose_name=_("Etappe score voor renner"),
-    #     blank=True
-    # )
 
     class Meta:
         verbose_name = _("Speelteam")
@@ -191,14 +186,3 @@ class StageScoreForParticipantTeam(models.Model):
         return _("Etappe scores voor %(team)s") % {
             "team": self.participant_team.user.get_full_name()
         }
-
-    # @property
-    # def score_for_stage(self):
-    #     return self.rider_stage_scores.aggregate(total=Sum("score"))["total"]
-    #
-    # @property
-    # def accumulated_score(self):
-    #     return StageScoreForParticipantTeam.objects.filter(
-    #         participant_team=self.participant_team,
-    #         stage__date__lte=self.stage.date
-    #     ).aggregate(total=Sum("rider_stage_scores__score"))["total"]

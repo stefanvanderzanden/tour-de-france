@@ -11,7 +11,5 @@ class UserAdmin(admin.ModelAdmin):
         "email",
         "is_staff",
         "is_superuser",
-        # "groups",
-        # "user_permissions"
     ]
     list_display = ["last_name", "first_name", "email"]
