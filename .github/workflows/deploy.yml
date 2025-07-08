@@ -10,8 +10,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Git Checkout
+      uses: actions/checkout@v4
 
-      - name: Echo success message
-        run: echo "Succes"
+    - name: Build latest
+      run: docker build -t ${{ vars.DO_REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }} .
+
+    - name: Provide doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+       token: ${{ secrets.DIGITAL_OCEAN_TOKEN }}
+
+    - name: Login to Digital Ocean Registry
+      run: doctl registry login --expiry-seconds 600
+
+    - name: Push to Digital Ocean Registry
+      run: docker push ${{ vars.DO_REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
