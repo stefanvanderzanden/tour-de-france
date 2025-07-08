@@ -1,0 +1,17 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - feature/add-uv-and-create-working-version
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Echo success message
+        run: echo "Succes"
