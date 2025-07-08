@@ -1,25 +1,35 @@
-[tool.poetry]
-name = "tourdefrance"
+[project]
+name = "tour-de-france"
 version = "0.1.0"
-description = "A tour de france game app"
-authors = ["Stefan van der Zanden <stefan.vanderzanden@gmail.com>"]
+description = "A tour de france game"
 readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django-countries>=7.6.1",
+    "django>=5.2.3",
+    "psycopg2>=2.9.10",
+    "django-tailwind>=4.0.1",
+    "requests>=2.32.4",
+    "beautifulsoup4>=4.13.4",
+    "django-polymorphic>=4.1.0",
+    "python-decouple>=3.8",
+    "django-jazzmin>=3.0.1",
+    "pillow>=11.2.1",
+    "djangorestframework>=3.16.0",
+    "markdown>=3.8.2",
+    "django-filter>=25.1",
+    "whitenoise>=6.9.0",
+    "gunicorn>=23.0.0",
+    "django-storages>=1.14.6",
+    "dj-database-url>=3.0.1",
+    "boto3>=1.39.3",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-django = "^4.2"
-psycopg2-binary = "^2.9"
-django-countries = "^7.5"
-requests = "^2.31"
-beautifulsoup4 = "^4.12"
-django-polymorphic = "^3.1"
-django-tailwind = "^3.6"
-
-[tool.poetry.dev-dependencies]
-black = "^23.7"
-cookiecutter = "^2.2"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "bandit>=1.8.5",
+    "black>=25.1.0",
+    "flake8>=7.3.0",
+    "isort>=6.0.1",
+    "pytest>=8.4.1",
+]

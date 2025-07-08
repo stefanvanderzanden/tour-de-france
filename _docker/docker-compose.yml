@@ -23,7 +23,7 @@ services:
     depends_on:
       - db
   db:
-    image: postgres:13
+    image: postgres:17
     container_name: tourdefrance-db
     volumes:
       - postgres_data:/var/lib/postgresql/data/

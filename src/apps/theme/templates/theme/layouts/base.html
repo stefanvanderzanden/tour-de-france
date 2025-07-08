@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    {% include 'theme/includes/../includes/head.html' %}
+    {% block extrastyle %}{% endblock extrastyle %}
+  </head>
+  <body class="m-0 font-sans text-base antialiased font-normal leading-default bg-gray-50 text-slate-500">
+    {% block body %}{% endblock %}
+  </body>
+
+{#  {% include 'theme/includes/fixed_plugin.html' %}#}
+
+{#  {% include 'theme/includes/scripts.html' %}#}
+  {% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
+    <script src="{% static 'js/modal.js' %}"></script>
+  {% endblock extra_js %}
+
+</html>

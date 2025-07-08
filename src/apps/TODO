@@ -1,0 +1,23 @@
+1. Persoonlijke pagina
+    - X 27 rijders kunnen kiezen
+        - X geen dubbele
+        - X create modal met alle rijders
+            - X reeds gekozen zijn grayed out
+        - X sla rijder op
+    - select modal stijlen
+    - persoonlijke score tonen
+    - overall ranking tonen (t.o.v. iedereen)
+    - deploy with static
+
+2. Groepen maken
+    - groep aanmaken
+    - andere gebruikers uitnodigen
+    -
+
+3. Dashboard, met links naar races waar je aan mee kunt doen
+
+4. Vertalingen
+
+Gebruiker
+=========
+s.vanderzanden@test.nl - Test1234567!

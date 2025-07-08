@@ -9,3 +9,8 @@
 
 # Virtualenv
 .venv
+.gitignore
+.env
+
+# Do not include backup files
+backups/*.sql

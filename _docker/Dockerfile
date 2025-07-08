@@ -1,47 +1,48 @@
-FROM nikolaik/python-nodejs:python3.10-nodejs20-slim
-#FROM python:3.10
+FROM python:3.12-slim
 
-RUN apt update
+ENV USER=app-user \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    UV_PROJECT_ENVIRONMENT=/usr/local
 
-# Install supporting packages
-RUN apt install -y vim # netcat lsof
-# Requirements for psycopg2 package
-RUN apt install -y libpq-dev python3-dev
 
-# Install packages for NodeJS
-#RUN apt-get install -y git-core curl build-essential openssl libssl-dev \
-# && git clone https://github.com/nodejs/node.git \
-# && cd node \
-# && ./configure \
-# && make \
-# && sudo make install
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    curl libpq-dev python3-dev build-essential\
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -m -s /bin/bash $USER
 
-ENV USER appuser
-ENV HOME /home/$USER
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN pip install --upgrade pip
-RUN pip install pipenv
+ENV APP_DIR=/home/$USER/src
 
-RUN useradd -m $USER && echo $USER:$USER | chpasswd && adduser $USER sudo
-ENV APP_HOME $HOME/code
-RUN mkdir -p $APP_HOME
-RUN mkdir $APP_HOME/staticfiles
-RUN mkdir $APP_HOME/mediafiles
-WORKDIR $APP_HOME
+RUN mkdir $APP_DIR
+RUN mkdir $APP_DIR/staticfiles
 
-# INSTALL ALL DEPENDENCIES
-COPY ./Pipfile.lock $APP_HOME/Pipfile.lock
-COPY ./Pipfile $APP_HOME/Pipfile
+WORKDIR $APP_DIR
 
-# Add .local/bin to path
-ENV PATH "$PATH:$HOME/.local/bin"
-RUN chown -R $USER:$USER $HOME
-RUN pipenv install --system --deploy --ignore-pipfile
-#
-#COPY . $APP_HOME
-RUN chown -R $USER:$USER $APP_HOME
+RUN --mount=type=cache,target=/home/$USER/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project
 
+
+COPY ../pyproject.toml uv.lock $APP_DIR
+COPY ../src $APP_DIR
+
+RUN --mount=type=cache,target=/home/$USER/.cache/uv \
+    uv sync --frozen
+
+ENV PYTHONPATH=$APP_DIR
+
+RUN uv run python manage.py collectstatic --no-input
+
+RUN chown -R "$USER":"$USER" $APP_DIR
 USER $USER
 
-#RUN chmod +x /home/appuser/app/docker-files/entrypoint.sh
-#ENTRYPOINT ["/home/appuser/app/docker-files/entrypoint.sh"]
+EXPOSE 8000
+
+
+# Start Gunicorn zonder venv
+CMD ["gunicorn", "_project.wsgi:application", "--bind", "0.0.0.0:8000"]
