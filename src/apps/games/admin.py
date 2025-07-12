@@ -18,8 +18,22 @@ class ParticipantTeamRidersTabularInline(admin.TabularInline):
 @admin.register(ParticipantTeam)
 class ParticipantTeamAdmin(admin.ModelAdmin):
     fields = ["user", "round"]
-    list_display = ["user", "round", "total_points"]
+    list_display = ["user", "round", "total_points_display"]
     actions = ["calculate_team_scores"]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(
+            total_points_annotated=Sum(
+                "scores_for_stages__score_for_stage"
+            )
+        )
+
+    def total_points_display(self, obj):
+        return obj.total_points_annotated or 0
+
+    total_points_display.short_description = "Total Points"
+    total_points_display.admin_order_field = "total_points_annotated"
 
     @admin.action(description="Bereken scores voor teams")
     def calculate_team_scores(modeladmin, request, queryset):
