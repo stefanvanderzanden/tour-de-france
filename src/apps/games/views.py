@@ -230,7 +230,7 @@ class RoundSubleagueOverview(LoginRequiredMixin, RoundContextMixin, TemplateView
             for stage_day in stage_days:
                 try:
                     stage_score = StageScoreForParticipantTeam.objects.get(
-                        participant_team__round=round, stage=stage_day
+                        participant_team=participant_team, stage=stage_day
                     )
                     accumulated_score = stage_score.accumulated_score
                 except StageScoreForParticipantTeam.DoesNotExist:
