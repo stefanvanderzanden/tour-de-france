@@ -8,8 +8,8 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.views.generic.base import RedirectView
 
-from apps.games.models import ParticipantTeam, RiderForParticipantTeam
-from apps.races.models import Round, TeamForRound, RiderForTeam
+from apps.games.models import ParticipantTeam, RiderForParticipantTeam, StageScoreForParticipantTeam
+from apps.races.models import Round, TeamForRound, RiderForTeam, StageDay
 
 
 class RoundContextMixin:
@@ -54,7 +54,7 @@ class StartRoundView(LoginRequiredMixin, RedirectView):
 
 class RoundDetailView(RoundContextMixin, TemplateView):
     """Main dashboard showing user's team with 27 slots"""
-    template_name = 'games/dashboard.html'
+    template_name = 'games/round_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -71,7 +71,7 @@ class RoundDetailView(RoundContextMixin, TemplateView):
         can_change = not round.has_started
 
         context.update({
-            "can_change": can_change,
+            "can_change": True,
             'participant_team': participant_team,
             'rider_by_position': rider_by_position,
             'riders_count': len(selected_riders),
@@ -200,8 +200,48 @@ class TeamSelectionPartialView(LoginRequiredMixin, RoundContextMixin, View):
 
         context = self.get_context_data(**kwargs)
         context.update({
+            "can_change": True,
             'rider_by_position': rider_by_position,
             'participant_team': participant_team,
         })
 
         return render(request, 'games/partials/team_selection.html', context)
+
+
+class RoundSubleagueOverview(LoginRequiredMixin, RoundContextMixin, TemplateView):
+    template_name = "games/round_subleague_overview.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        round = self.get_round_object()
+
+        # Get all races with scores
+        stage_days = StageDay.objects.filter(round=round, scores_for_riders__isnull=False).distinct().order_by("number")
+
+        labels = [s.number for s in stage_days]
+        data_sets = []
+
+        for participant_team in ParticipantTeam.objects.all():
+            data_set = {
+                "data": [],
+                "label": participant_team.user.get_full_name(),
+            }
+            accumulated_score = 0
+            for stage_day in stage_days:
+                try:
+                    stage_score = StageScoreForParticipantTeam.objects.get(
+                        participant_team__round=round, stage=stage_day
+                    )
+                    accumulated_score = stage_score.accumulated_score
+                except StageScoreForParticipantTeam.DoesNotExist:
+                    pass
+
+                data_set["data"].append(accumulated_score)
+
+            data_sets.append(data_set)
+
+        context["chart_data"] = {
+            "labels": labels,
+            "datasets": data_sets
+        }
+        return context

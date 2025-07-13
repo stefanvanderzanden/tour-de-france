@@ -7,7 +7,7 @@ from apps.games.views import (
     AddRiderView,
     RemoveRiderView,
     RoundDetailView,
-    TeamSelectionPartialView, StartRoundView
+    TeamSelectionPartialView, StartRoundView, RoundSubleagueOverview
 )
 from ..races.models import Round
 
@@ -31,6 +31,9 @@ class RoundConverter(StringConverter):
 register_converter(RoundConverter, 'round')
 
 round_nested_patterns = [
+    path("", RoundDetailView.as_view(), name="round_detail"),
+    path("subleague/", RoundSubleagueOverview.as_view(), name="round_subleague_overview"),
+    path("start/", StartRoundView.as_view(), name="start"),
     path("select-rider/<int:position>/", RiderSelectionModalView.as_view(), name="select_rider"),
     path("add-rider/", AddRiderView.as_view(), name="add_rider"),
     path("remove-rider/<int:rider_id>/", RemoveRiderView.as_view(), name="remove_rider"),
@@ -38,7 +41,5 @@ round_nested_patterns = [
 ]
 
 urlpatterns = [
-    path("<round:round>/<int:year>/start/", StartRoundView.as_view(), name="start"),
-    path("<round:round>/<int:year>/", RoundDetailView.as_view(), name="round_detail"),
     path("<round:round>/<int:year>/", include(round_nested_patterns)),
 ]
