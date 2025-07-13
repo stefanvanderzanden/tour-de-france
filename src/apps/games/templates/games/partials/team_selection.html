@@ -1,0 +1,22 @@
+<div
+    class="container mx-auto px-4 py-8"
+    hx-get="{% url 'games:team_selection_refresh' round year %}"
+    hx-trigger="refreshTeam from:body"
+    hx-swap="innerHTML"
+>
+    {{ can_change }}
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ participant_team.round }}</h1>
+        <div class="flex items-center space-x-4 text-sm text-gray-600">
+            <div id="team-summary">
+                {% include 'games/partials/team_summary.html' %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Team Grid -->
+    <div id="team-grid">
+        {% include 'games/partials/team_slots.html' %}
+    </div>
+</div>

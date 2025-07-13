@@ -1,0 +1,11 @@
+{% extends 'theme/layouts/base_authenticated.html' %}
+
+{% load static %}
+{% block content %}
+    <main class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <div class="mx-4">
+            <a href="{% url 'dashboard' %}">Terug</a>
+        </div>
+        {% include "games/partials/team_selection.html" %}
+    </main>
+{% endblock %}

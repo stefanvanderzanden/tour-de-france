@@ -1,0 +1,70 @@
+{% load static %}
+{% load custom_tags %}
+<div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-4">
+    {% for pos in 1|to:27 %}
+        {% with slot=rider_by_position|get_item:pos %}
+            <div class="h-[140px] bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
+                {% if slot %}
+                    <!-- Filled slot with rider -->
+                    <div class="h-full flex flex-col">
+                        <!-- Rider Image -->
+                        <div class="flex-1 relative h-[80px]">
+                            {% if slot.rider.photo %}
+                                <img
+                                        src="{{ slot.rider.photo.url }}"
+                                        alt="{{ slot.rider.full_name }}"
+                                        class="w-full h-full object-cover"
+                                />
+                            {% else %}
+                                <img
+                                        src="{% static 'img/placeholder.webp' %}"
+                                        alt="{{ slot.rider.full_name }}"
+                                        class="w-full h-full object-cover"
+                                >
+                            {% endif %}
+                            <!-- Remove button -->
+                            {% if can_change %}
+                            <button
+                                    hx-post="{% url 'games:remove_rider' round year slot.rider.id %}"
+                                    hx-confirm="Remove {{ slot.rider.full_name }} from your team?"
+                                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                                    class="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs transition-colors duration-200">
+                                ×
+                            </button>
+                            {% endif %}
+                        </div>
+
+                        <!-- Rider Info -->
+                        <div class="p-2 bg-gray-50">
+                            <p class="text-xs font-semibold text-gray-800 truncate">
+                                {{ slot.rider.full_name }}
+                            </p>
+                            <p class="text-xs text-gray-600 truncate">
+                                {{ slot.rider.team.name }}
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    {% if can_change %}
+                    <!-- Empty slot -->
+                    <button
+                            hx-get="{% url 'games:select_rider' round year forloop.counter %}"
+                            hx-target="#modal-content"
+                            hx-trigger="click"
+                            onclick="openModal()"
+                            class="w-full h-full flex flex-col items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors duration-200 border-2 border-dashed border-gray-300 hover:border-gray-400 rounded-lg">
+
+                        <!-- Plus icon -->
+                        <svg class="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+
+                        <span class="text-xs font-medium">Add Rider</span>
+                    </button>
+                        {% endif %}
+                {% endif %}
+            </div>
+        {% endwith %}
+    {% endfor %}
+</div>

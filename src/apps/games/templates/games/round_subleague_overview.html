@@ -1,0 +1,27 @@
+{% extends 'theme/layouts/base_authenticated.html' %}
+
+{% block content %}
+    <canvas id="myChart" width="400" height="100"></canvas>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {{ chart_data.labels|safe }},
+      datasets: {{ chart_data.datasets|safe }}
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

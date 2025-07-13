@@ -1,0 +1,37 @@
+{% extends 'theme/layouts/base_authenticated.html' %}
+{% load static %}
+
+{% block content %}
+    <h1 class="text-2xl my-8 font-semibold">Welkom {{ user.get_full_name }}</h1>
+    <section class="text-gray-600 body-font">
+      <div class="container px-5 py-12 mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-3 flex-wrap -mx-4 -my-8 gap-8">
+            {% for round in available_rounds %}
+          <div class="py-8 px-4 border border-gray-200 rounded-lg shadow-sm">
+            <div class="h-full flex items-start">
+              <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
+                <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{ round.start_date|date:"M" }}</span>
+                <span class="font-medium text-lg text-gray-800 title-font leading-none">{{ round.start_date|date:"d" }}</span>
+              </div>
+              <div class="flex-grow pl-6">
+                <h2 class="tracking-widest text-xs title-font font-medium text-indigo-500 mb-1">{{ round.start_date|date:"Y" }}</h2>
+                <h1 class="title-font text-xl font-medium text-gray-900 mb-3">{{ round.get_type_display }}</h1>
+                <p class="leading-relaxed mb-5">De tour de france van Lille naar de Champs-Élysées.</p>
+                  {% if round in active_rounds %}
+                    <a class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" href="{% url 'games:round_detail' round.type round.year %}">
+                        Naar team
+                    </a>
+                  {% else %}
+                    <a class="inline-flex items-center" href="{% url 'games:start' round.type round.year %}">
+                        Naar team
+                    </a>
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+            {% endfor %}
+        </div>
+      </div>
+    </section>
+
+{% endblock %}

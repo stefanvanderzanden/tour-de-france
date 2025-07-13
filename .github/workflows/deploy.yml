@@ -1,0 +1,29 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: test
+
+    steps:
+    - name: Git Checkout
+      uses: actions/checkout@v4
+
+    - name: Build latest
+      run: docker build -f _docker/Dockerfile -t ${{ vars.DO_REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }} .
+
+    - name: Provide doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+       token: ${{ secrets.DIGITAL_OCEAN_TOKEN }}
+
+    - name: Login to Digital Ocean Registry
+      run: doctl registry login --expiry-seconds 600
+
+    - name: Push to Digital Ocean Registry
+      run: docker push ${{ vars.DO_REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
